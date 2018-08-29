@@ -1,24 +1,16 @@
 {
   "name": "davids-grand-server",
-  "version": "1.0.0",
-  "description": "\"# davids-grand-server\"",
-  "main": "index.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidThorpe71/davids-grand-server.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DavidThorpe71/davids-grand-server/issues"
-  },
-  "homepage": "https://github.com/DavidThorpe71/davids-grand-server#readme",
   "dependencies": {
-    "apollo-server": "^2.0.5",
-    "graphql": "^0.13.2"
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0"
   }
 }
