@@ -6,7 +6,7 @@ import http from "http";
 import { ENV } from "./config/env";
 import helmet from "helmet";
 import compression from "compression";
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/schema";
 const debug = require('debug')('davids-grand-server:server');
