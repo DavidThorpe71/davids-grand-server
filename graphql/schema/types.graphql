@@ -1,0 +1,12 @@
+type User {
+  _id: ID!
+  email: String
+  firstName: String
+  lastName: String
+}
+
+input addUserInput {
+  email: String
+  firstName: String
+  lastName: String
+}
