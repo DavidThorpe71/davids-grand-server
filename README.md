@@ -1,4 +1,4 @@
-# davids-grand-server
+# David's Grand Server
 
 
 1. Run `npm run dev` to start development server
