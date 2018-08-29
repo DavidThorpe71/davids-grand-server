@@ -13,3 +13,9 @@ express
 apollo server
 
 graphql
+
+### TODO:
+
+1. Setup [MongoDB](https://www.mongodb.com/)
+1. Add [CircleCI](https://circleci.com/) continuous integration
+1. Add [Sentry](https://sentry.io/welcome/) error tracking
