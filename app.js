@@ -9,7 +9,29 @@ import compression from "compression";
 import { ApolloServer } from 'apollo-server-express';
 import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/schema";
+import Raven from 'raven';
 const debug = require('debug')('davids-grand-server:server');
+
+var app = express();
+
+Raven.config('https://80ed319bdbfe4f95b2d16780fb682cf3@sentry.io/1271316').install();
+// The request handler must be the first middleware on the app
+app.use(Raven.requestHandler());
+
+app.get('/', function mainHandler(req, res) {
+  throw new Error('Broke!');
+});
+
+// The error handler must be before any other error middleware
+app.use(Raven.errorHandler());
+
+// Optional fallthrough error handler
+app.use(function onError(err, req, res, next) {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500;
+  res.end(res.sentry + '\n');
+});
 
 
 function normalizePort(val) {
@@ -30,7 +52,7 @@ function normalizePort(val) {
 
 var port = normalizePort(process.env.PORT || '4000');
 
-var app = express();
+
 
 app.set('port', port);
 
