@@ -9,6 +9,7 @@ import compression from 'compression';
 import { ApolloServer } from 'apollo-server-express';
 import Raven from 'raven';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import resolvers from './graphql/resolvers';
 import typeDefs from './graphql/schema';
 import { ENV } from './config/env';
@@ -42,8 +43,8 @@ app.use((err, req, res, next) => {
   res.end(`${res.sentry}\n`);
 });
 
+// Defines the port to run the server on
 const port = process.env.PORT || '4444';
-
 app.set('port', port);
 
 app.use(logger('dev'));
@@ -54,7 +55,7 @@ app.use(cookieParser());
 // Put userId on each request by decoding the jwt and adding it to the request
 app.use((req, res, next) => {
   const { token } = req.cookies;
-  console.log(req.cookies);
+  console.log('req.cookies', req.cookies);
   if (token) {
     const { userId } = jwt.verify(token, process.env.APP_SECRET);
     req.userId = userId;
@@ -62,16 +63,20 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(
+  cors({
+    origin: 'http://localhost:7777',
+    credentials: true
+  })
+);
+
 // middleware to populate the user on each request
 app.use(async (req, res, next) => {
   // If they aren't logged in skip this
   if (!req.userId) return next();
   // Get user from database by userID and add that user to req.user
-  // const user = await db.query.user(
-  //   { where: { id: req.userId } },
-  //   '{id, permissions, email, name}'
-  // );
-  // req.user = user;
+  const user = await User.findById(req.userId);
+  req.user = user;
   next();
 });
 
@@ -83,8 +88,6 @@ if (ENV === 'production') {
 } else {
   app.use(logger('dev'));
 }
-
-const server = http.createServer(app);
 
 // connect to Mongo database
 const connect = () => {
@@ -107,9 +110,7 @@ function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
-
   const bind = `Port ${port}`;
-
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
@@ -125,15 +126,8 @@ function onError(error) {
   }
 }
 
-function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
-}
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+app.listen(port);
+app.on('error', onError);
 
 console.info(`Server running on port ${port} in ${ENV} mode!`);
 console.info(`GraphQL playground: http://localhost:${port}/graphql`);

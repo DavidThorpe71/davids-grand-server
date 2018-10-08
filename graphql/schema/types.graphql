@@ -1,12 +1,11 @@
 type User {
-  _id: ID!
   email: String
-  firstName: String
-  lastName: String
+  password: String
+  name: String
 }
 
-input addUserInput {
+input createUserInput {
   email: String
-  firstName: String
-  lastName: String
+  password: String
+  name: String
 }
