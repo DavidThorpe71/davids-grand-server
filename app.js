@@ -12,8 +12,6 @@ import cookieParser from 'cookie-parser';
 // import typeDefs from './graphql/schema';
 
 
-import User from "./database/models/User";
-
 // const debug = require('debug')('davids-grand-server:server');
 
 // const app = express();
@@ -129,7 +127,8 @@ import { ApolloServer } from "apollo-server-express";
 import http from "http";
 import mongoose from "mongoose";
 import cors from "cors";
-import db from "./database/db";
+import User from "./database/models/User";
+import db from './database/db';
 import { ENV } from './config/env';
 import resolvers from './graphql/resolvers';
 import typeDefs from './graphql/schema';
@@ -183,6 +182,7 @@ const connect = () => {
 mongoose.set('useCreateIndex', true);
 connect();
 mongoose.connection.on('disconnected', connect);
+
 app.use(cookieParser());
 apollo.applyMiddleware({ app });
 const server = http.createServer(app);
