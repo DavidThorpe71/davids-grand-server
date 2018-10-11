@@ -1,6 +1,6 @@
 // import express from 'express';
 // import path from 'path';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 // import jwt from 'jsonwebtoken';
 // import logger from 'morgan';
 // import helmet from 'helmet';
@@ -11,9 +11,8 @@
 // import resolvers from './graphql/resolvers';
 // import typeDefs from './graphql/schema';
 
-// import db from './database/db';
 
-// import User from './database/models/User';
+import User from "./database/models/User";
 
 // const debug = require('debug')('davids-grand-server:server');
 
@@ -93,21 +92,6 @@
 // }
 
 // // connect to Mongo database
-// const connect = () => {
-//   mongoose
-//     .connect(
-//       db,
-//       { useNewUrlParser: true }
-//     )
-//     .then(() => console.info(`Successfully connected to ${db}`))
-//     .catch((error) => {
-//       console.error('Error connecting to database: ', error);
-//       return process.exit(1);
-//     });
-// };
-// mongoose.set('useCreateIndex', true);
-// connect();
-// mongoose.connection.on('disconnected', connect);
 
 // function onError(error) {
 //   if (error.syscall !== 'listen') {
@@ -140,11 +124,12 @@
 // app.on('error', onError);
 
 // export default app;
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import http from 'http';
-import mongoose from 'mongoose';
-import cors from 'cors';
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import http from "http";
+import mongoose from "mongoose";
+import cors from "cors";
+import db from "./database/db";
 import { ENV } from './config/env';
 import resolvers from './graphql/resolvers';
 import typeDefs from './graphql/schema';
@@ -165,15 +150,41 @@ const apollo = new ApolloServer({
 });
 
 const app = express();
-apollo.applyMiddleware({ app });
 
-// enable cors
-const corsOptions = {
-  origin: 'http://localhost:7777',
-  credentials: true // <-- REQUIRED backend setting
+app.use((req, res, next) => {
+  const REQUEST_ORIGIN = req.get('origin');
+  const whitelist = ['http://localhost:7777'];
+  if (whitelist.includes(REQUEST_ORIGIN)) {
+    res.header('Access-Control-Allow-Origin', REQUEST_ORIGIN);
+  }
+
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  return next();
+});
+
+const connect = () => {
+  mongoose
+    .connect(
+      db,
+      { useNewUrlParser: true }
+    )
+    .then(() => console.info(`Successfully connected to ${db}`))
+    .catch((error) => {
+      console.error('Error connecting to database: ', error);
+      return process.exit(1);
+    });
 };
-app.use(cors(corsOptions));
-
+mongoose.set('useCreateIndex', true);
+connect();
+mongoose.connection.on('disconnected', connect);
+app.use(cookieParser());
+apollo.applyMiddleware({ app });
 const server = http.createServer(app);
 
 // Add subscription support
