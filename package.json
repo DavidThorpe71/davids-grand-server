@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "build": "babel ./server -d dist --presets node8 --copy-files",
+    "pull": "git pull https://github.com/DavidThorpe71/davids-grand-server.git",
     "dev": "cross-env NODE_ENV=development && nodemon ./node_modules/@babel/node/bin/babel-node.js --presets @babel/preset-env ./server/app.js"
   },
   "dependencies": {
