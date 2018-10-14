@@ -73,7 +73,7 @@ app.use((req, res, next) => {
 
 apollo.applyMiddleware({
   app,
-  cors: { origin: 'http://localhost:7777', credentials: true }
+  cors: { origin: 'http://46.101.46.212', credentials: true }
 });
 
 const server = http.createServer(app);
