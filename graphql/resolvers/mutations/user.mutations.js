@@ -26,6 +26,32 @@ const userMutations = {
 
     // return user to the browser
     return user;
+  },
+  signIn: async (parent, args, ctx, info) => {
+    const { email, password } = args;
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error(`No user found for email ${email}`);
+    }
+
+    // Check password is correct
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      throw new Error(`Invalid password`);
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+
+    ctx.res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year cookie
+    });
+    // console.log('hello');
+    return user;
+  },
+  signOut: (parent, args, ctx, info) => {
+    ctx.res.clearCookie('token');
+    return { message: 'Signed out!' };
   }
 };
 
