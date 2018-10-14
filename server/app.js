@@ -13,8 +13,18 @@ dotenv.config();
 
 const configurations = {
   // Note: You may need sudo to run on port 443
-  production: { ssl: true, port: 443, hostname: 'nginxtest' },
-  development: { ssl: false, port: 4000, hostname: 'localhost' }
+  production: {
+    ssl: true,
+    port: 4000,
+    hostname: 'nginxtest',
+    introspection: true
+  },
+  development: {
+    ssl: false,
+    port: 4000,
+    hostname: 'localhost',
+    introspection: true
+  }
 };
 
 const environment = process.env.NODE_ENV || 'production';
@@ -23,6 +33,7 @@ const config = configurations[environment];
 const apollo = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: config.introspection,
   context: ({ req, res }) => ({ req, res })
 });
 
