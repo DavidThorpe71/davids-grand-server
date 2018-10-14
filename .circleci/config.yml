@@ -11,7 +11,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:9.8.0
+      - image: circleci/node:8.10.0
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -38,3 +38,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       # run tests!
       # - run: yarn test
+      - deploy:
+          name: digital-ocean
+          command: ssh -o "StrictHostKeyChecking no" circleci@46.101.46.212 "cd /var/www/davids-grand-server; npm run pull; npm run build"
