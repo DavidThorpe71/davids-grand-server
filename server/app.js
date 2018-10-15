@@ -17,13 +17,15 @@ const configurations = {
     ssl: true,
     port: 4000,
     hostname: 'nginxtest',
-    introspection: true
+    introspection: true,
+    origin: 'http://46.101.46.212'
   },
   development: {
     ssl: false,
     port: 4000,
     hostname: 'localhost',
-    introspection: true
+    introspection: true,
+    origin: 'http://localhost:7777'
   }
 };
 
@@ -73,7 +75,7 @@ app.use((req, res, next) => {
 
 apollo.applyMiddleware({
   app,
-  cors: { origin: 'http://46.101.46.212', credentials: true }
+  cors: { origin: config.origin, credentials: true }
 });
 
 const server = http.createServer(app);
@@ -82,8 +84,7 @@ const server = http.createServer(app);
 apollo.installSubscriptionHandlers(server);
 
 server.listen({ port: config.port }, () => console.log(
-    '🚀 Server ready at',
-    `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${
-      apollo.graphqlPath
-    }`
+    `🚀  Server ready at http${config.ssl ? 's' : ''}://${config.hostname}:${
+      config.port
+    }${apollo.graphqlPath} 🚀`
   ));
