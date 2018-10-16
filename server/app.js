@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import db from './database/db';
 import resolvers from './graphql/resolvers';
 import typeDefs from './graphql/schema';
+// import Record from './database/models/Record';
 
 dotenv.config();
 
@@ -45,7 +46,7 @@ const connect = () => {
   mongoose
     .connect(
       db,
-      { useNewUrlParser: true }
+      { useNewUrlParser: true, useCreateIndex: true }
     )
     .then(() => console.info(`Successfully connected to ${db}`))
     .catch((error) => {
@@ -53,7 +54,8 @@ const connect = () => {
       return process.exit(1);
     });
 };
-mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
+
 connect();
 mongoose.connection.on('disconnected', connect);
 

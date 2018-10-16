@@ -1,11 +1,17 @@
 type User {
-  email: String
-  password: String
+  email: String!
+  password: String!
   name: String
 }
 
-input createUserInput {
-  email: String
-  password: String
+type Book {
+  title: String
+  "author of book"
+  author: Author
+}
+
+type Author {
   name: String
+  "books written by author"
+  books: [Book]
 }

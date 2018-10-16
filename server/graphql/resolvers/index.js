@@ -1,13 +1,13 @@
-import userQueries from './queries/user.queries';
-import userMutations from './mutations/user.mutations';
-import userUnions from './unions/user.unions';
+import queries from './queries';
+import mutations from './mutations';
+import unions from './unions';
 
 export default {
   Mutation: {
-    ...userMutations
+    ...mutations
   },
   Query: {
-    ...userQueries
+    ...queries
   },
-  ...userUnions
+  ...unions
 };

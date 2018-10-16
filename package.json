@@ -11,8 +11,8 @@
   "dependencies": {
     "apollo-server-express": "^2.1.0",
     "babel-cli": "^6.26.0",
-    "babel-preset-node8": "^1.2.0",
     "babel-plugin-inline-import": "^3.0.0",
+    "babel-preset-node8": "^1.2.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.3",
     "cookie-parser": "~1.4.3",
@@ -26,6 +26,7 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.1",
+    "mongoose-mongodb-errors": "0.0.2",
     "morgan": "~1.9.0",
     "raven": "^2.6.3"
   },
