@@ -1,6 +1,10 @@
 import User from '../../database/models/User';
 import Book from '../../database/models/Book';
 import Author from '../../database/models/Author';
+import Person from '../../database/models/Person';
+import EyeColor from '../../database/models/EyeColor';
+import Company from '../../database/models/Company';
+import testData from '../../../json/test.json';
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -67,6 +71,35 @@ const userMutations = {
       { upsert: true, returnNewDocument: true }
     ).exec();
     return book;
+  },
+  createTestData: async (parent, args, ctx, info) => {
+    console.log(testData.length);
+    testData.map(async (item) => {
+      const eyePromise = await EyeColor.findOneAndUpdate(
+        { color: item.eyeColor },
+        { color: item.eyeColor },
+        { upsert: true, new: true }
+      ).exec();
+      console.log('eye test done');
+      const companyTest = await Company.findOneAndUpdate(
+        { name: item.company },
+        { name: item.company },
+        { upsert: true, new: true }
+      );
+      console.log('companytest done');
+      const personTest = await Person.findOneAndUpdate(
+        { email: item.email },
+        {
+          name: item.email,
+          age: item.age,
+          eyeColor: eyePromise._id,
+          gender: item.gender,
+          company: companyTest._id
+        },
+        { upsert: true, new: true }
+      );
+    });
+    return 'Success 👌👍✌😎';
   }
 };
 

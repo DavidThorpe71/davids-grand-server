@@ -13,6 +13,7 @@ type Mutation {
   signIn(email: String!, password: String!): User!
   signOut: SuccessMessage
   addBook(title: String!, author: String!): Book!
+  createTestData: String
 }
 
 type SuccessMessage {
